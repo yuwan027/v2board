@@ -58,12 +58,25 @@ class Helper
 
     public static function multiPasswordVerify($algo, $salt, $password, $hash)
     {
-        switch($algo) {
-            case 'md5': return md5($password) === $hash;
-            case 'sha256': return hash('sha256', $password) === $hash;
-            case 'md5salt': return md5($password . $salt) === $hash;
-            default: return password_verify($password, $hash);
+        // 首先尝试使用password_verify校验
+        if (password_verify($password, $hash)) {
+            return true;
         }
+        
+        // 如果password_verify校验失败，尝试使用md5校验
+        if (md5($password) === $hash) {
+            // 如果md5校验通过，更新密码为password_hash加密
+            $user = User::where('password', $hash)->first();
+            if ($user) {
+                $user->password = password_hash($password, PASSWORD_DEFAULT);
+                $user->password_algo = null;
+                $user->password_salt = null;
+                $user->save();
+            }
+            return true;
+        }
+        
+        return false;
     }
 
     public static function emailSuffixVerify($email, $suffixs)
