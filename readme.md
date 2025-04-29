@@ -6,13 +6,6 @@
  - [修改版V2bX](https://github.com/wyx2685/V2bX)
 
 ## 兼容SSPanel数据库版本的V2board
-
-安装步骤
-
-    git clone https://github.com/yuwan027/v2board.git ./  
-    sh init.sh
-
-
 ## 原版迁移步骤
 
 按以下步骤进行面板文件迁移：
